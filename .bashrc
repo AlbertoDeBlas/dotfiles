@@ -56,8 +56,27 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
+normal_color=$'\033[01;33m'
+normal_light_color=$'\033[00;33m'
+red_color=$'\033[01;31m'
+red_light_color=$'\033[00;31m'
+exit_color=$normal_color
+exit_light_color=$normal_light_color
+
+set_exit_color() {
+   if [ "$?" != 0 ]; then
+	   exit_color=$red_color
+	   exit_light_color=$red_light_color
+   else
+	   exit_color=$normal_color
+	   exit_light_color=$normal_light_color
+   fi
+}
+
+PROMPT_COMMAND=set_exit_color
+
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;33m\]\u\[\033[01;37m\]@\[\033[00;33m\]\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+    PS1='${debian_chroot:+($debian_chroot)}\[$exit_color\]\u\[\033[01;37m\]@\[$exit_light_color\]\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
